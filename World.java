@@ -56,6 +56,7 @@ public class World {
             c.update(this);
 
             if (c.isDead()) {
+                System.out.println("A creature died at (" + c.x + ", " + c.y + ")");
                 it.remove();
             }
         }
