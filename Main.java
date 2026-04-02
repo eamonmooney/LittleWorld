@@ -6,9 +6,11 @@ public class Main {
 
         while (true) {
             world.update();
+            world.printWorld();
             world.printStats(tick);
+            System.out.println("------------------");
 
-            Thread.sleep(200); // slow it down
+            Thread.sleep(500); // slow it down
             tick++;
         }
     }

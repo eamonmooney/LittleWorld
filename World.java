@@ -73,4 +73,32 @@ public class World {
         System.out.println("Tick: " + tick +
                 " | Creatures: " + creatures.size());
     }
+
+    public void printWorld() {
+    char[][] display = new char[width][height];
+
+    // Draw tiles
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            if (tiles[x][y].type == TileType.FOOD) {
+                display[x][y] = '*'; // food
+            } else {
+                display[x][y] = '.'; // empty
+            }
+        }
+    }
+
+    // Draw creatures (overwrite tiles)
+    for (Creature c : creatures) {
+        display[c.x][c.y] = 'C';
+    }
+
+    // Print grid
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            System.out.print(display[x][y] + " ");
+        }
+        System.out.println();
+    }
+}
 }
