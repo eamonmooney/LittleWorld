@@ -25,4 +25,12 @@ public class World {
             creature.move();
         }
     }
+
+    public double getWidth() {
+        return WORLD_WIDTH;
+    }
+
+    public double getHeight() {
+        return WORLD_HEIGHT;
+    }
 }
