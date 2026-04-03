@@ -4,13 +4,14 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class World {
-    private List<Creature> creatures;
-    private List<Grass> grass;
-    private static final double WORLD_WIDTH = 600; 
-    private static final double WORLD_HEIGHT = 400; 
+    public static final double WORLD_WIDTH = 600; 
+    public static final double WORLD_HEIGHT = 400; 
+
     private static final int GRASS_SPAWN_INTERVAL = 10;
     private static final double GRASS_EAT_RADIUS = 10.0;
     private static final Random random = new Random();
+    private List<Creature> creatures;
+    private List<Grass> grass;
 
     private int moveCounter = 0;
 
@@ -32,16 +33,12 @@ public class World {
                     .noneMatch(c -> c.x == finalX && c.y == finalY);
             }
 
-            creatures.add(new Creature(x, y, WORLD_WIDTH, WORLD_HEIGHT));
+            creatures.add(new Creature(x, y));
         }
     }
 
-    public List<Creature> getCreatures() {
-        return creatures;
-    }
-
-    public List<Grass> getGrass() {
-        return grass;
+    public void checkForDeaths() {
+        creatures.removeIf(creature -> !creature.isAlive);
     }
 
     public void moveCreatures() {
@@ -52,6 +49,9 @@ public class World {
             double oldY = creature.y;
 
             while (!validMove) {
+                if (!creature.isAlive) {
+                    break; // Skip movement if creature is dead
+                }
                 creature.move();
 
                 // Check for collisions with other creatures only
@@ -68,6 +68,8 @@ public class World {
                 }
             }
 
+            creature.setEnergy(creature.getEnergy() - 1); // Move the creature after finding a valid position
+
             // Check for grass overlap with a radius
             grass.removeIf(grass -> {
                 double distance = Math.sqrt(Math.pow(creature.x - grass.x, 2) + Math.pow(creature.y - grass.y, 2));
@@ -83,6 +85,14 @@ public class World {
         if (moveCounter % GRASS_SPAWN_INTERVAL == 0) {
             spawnGrass();
         }
+    }
+
+    public List<Creature> getCreatures() {
+        return creatures;
+    }
+
+    public List<Grass> getGrass() {
+        return grass;
     }
 
     private void spawnGrass() {
