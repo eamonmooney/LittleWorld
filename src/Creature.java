@@ -29,4 +29,8 @@ public class Creature {
     public boolean collidesWith(Creature other) {
         return this != other && this.x == other.x && this.y == other.y;
     }
+
+    public void eatGrass(Grass grass) {
+        // Placeholder for future functionality
+    }
 }

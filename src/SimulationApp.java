@@ -25,23 +25,32 @@ public class SimulationApp extends Application {
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(() -> {
-            // Update the UI on the JavaFX Application Thread
             javafx.application.Platform.runLater(() -> {
                 if (!Toggles.PAINT_MODE) {
-                    root.getChildren().removeIf(node -> node instanceof Circle);
+                    root.getChildren().removeIf(node -> node instanceof Circle || node instanceof Rectangle && node != border);
                 }
+
+                // Render grass
+                root.getChildren().removeIf(node -> node instanceof Rectangle && node != border);
+                for (Grass g : world.getGrass()) {
+                    Rectangle grassRect = new Rectangle(g.x, g.y, 5, 5);
+                    grassRect.setFill(Color.GREEN);
+                    root.getChildren().add(grassRect);
+                }
+
+                // Render creatures
                 world.moveCreatures();
                 for (Creature c : world.getCreatures()) {
                     Circle circle = new Circle(c.x, c.y, 10.0, Color.BLUE);
                     root.getChildren().add(circle);
                 }
             });
-        }, 0, 100, TimeUnit.MILLISECONDS); // Adjust the interval to control speed
+        }, 0, 200, TimeUnit.MILLISECONDS);
 
         Scene scene = new Scene(root, world.getWidth(), world.getHeight());
         primaryStage.setTitle("LittleWorld Simulation");
         primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(event -> executor.shutdown()); // Shutdown executor on close
+        primaryStage.setOnCloseRequest(event -> executor.shutdown());
         primaryStage.show();
     }
 
