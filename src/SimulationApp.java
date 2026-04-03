@@ -45,7 +45,7 @@ public class SimulationApp extends Application {
                     root.getChildren().add(circle);
                 }
             });
-        }, 0, 10, TimeUnit.MILLISECONDS);
+        }, 0, GlobalConfig.getSimulationSpeed(), TimeUnit.MILLISECONDS);
 
         Scene scene = new Scene(root, world.getWidth(), world.getHeight());
         primaryStage.setTitle("LittleWorld Simulation");
