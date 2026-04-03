@@ -3,9 +3,11 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.paint.Color;
-import javafx.animation.AnimationTimer;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SimulationApp extends Application {
 
@@ -21,9 +23,10 @@ public class SimulationApp extends Application {
         border.setStrokeWidth(2);
         root.getChildren().add(border);
 
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(() -> {
+            // Update the UI on the JavaFX Application Thread
+            javafx.application.Platform.runLater(() -> {
                 if (!Toggles.PAINT_MODE) {
                     root.getChildren().removeIf(node -> node instanceof Circle);
                 }
@@ -32,13 +35,13 @@ public class SimulationApp extends Application {
                     Circle circle = new Circle(c.x, c.y, 10.0, Color.BLUE);
                     root.getChildren().add(circle);
                 }
-            }
-        };
-        timer.start();
+            });
+        }, 0, 100, TimeUnit.MILLISECONDS); // Adjust the interval to control speed
 
         Scene scene = new Scene(root, world.getWidth(), world.getHeight());
         primaryStage.setTitle("LittleWorld Simulation");
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(event -> executor.shutdown()); // Shutdown executor on close
         primaryStage.show();
     }
 
