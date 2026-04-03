@@ -9,9 +9,11 @@ public class World {
     public World() {
         creatures = new ArrayList<>();
         // spawn a few creatures at random positions
-        creatures.add(new Creature(100, 100, WORLD_WIDTH, WORLD_HEIGHT));
-        creatures.add(new Creature(200, 150, WORLD_WIDTH, WORLD_HEIGHT));
-        creatures.add(new Creature(300, 200, WORLD_WIDTH, WORLD_HEIGHT));
+        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
+        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
+        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
+        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
+        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
     }
 
     public List<Creature> getCreatures() {
