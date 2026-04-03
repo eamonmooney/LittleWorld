@@ -1,19 +1,32 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class World {
     private List<Creature> creatures;
     private static final double WORLD_WIDTH = 600; // Match the scene width
     private static final double WORLD_HEIGHT = 400; // Match the scene height
+    private static final Random random = new Random();
 
     public World() {
         creatures = new ArrayList<>();
-        // spawn a few creatures at random positions
-        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
-        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
-        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
-        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
-        creatures.add(new Creature(Math.random(), Math.random(), WORLD_WIDTH, WORLD_HEIGHT));
+        // Spawn creatures at random positions without overlap
+        for (int i = 0; i < 5; i++) {
+            boolean validPosition = false;
+            double x = 0, y = 0;
+
+            while (!validPosition) {
+                x = random.nextDouble() * WORLD_WIDTH;
+                y = random.nextDouble() * WORLD_HEIGHT;
+
+                double finalX = x;
+                double finalY = y;
+                validPosition = creatures.stream()
+                    .noneMatch(c -> c.x == finalX && c.y == finalY);
+            }
+
+            creatures.add(new Creature(x, y, WORLD_WIDTH, WORLD_HEIGHT));
+        }
     }
 
     public List<Creature> getCreatures() {
@@ -22,18 +35,24 @@ public class World {
 
     public void moveCreatures() {
         for (Creature creature : creatures) {
+            boolean validMove = false;
             double oldX = creature.x;
             double oldY = creature.y;
 
-            creature.move();
+            while (!validMove) {
+                creature.move();
 
-            // Check for collisions and revert if necessary
-            boolean collision = creatures.stream()
-                .anyMatch(other -> creature.collidesWith(other));
+                // Check for collisions
+                boolean collision = creatures.stream()
+                    .anyMatch(other -> creature.collidesWith(other));
 
-            if (collision) {
-                creature.x = oldX;
-                creature.y = oldY;
+                if (!collision) {
+                    validMove = true;
+                } else {
+                    // Revert to old position and retry
+                    creature.x = oldX;
+                    creature.y = oldY;
+                }
             }
         }
     }
