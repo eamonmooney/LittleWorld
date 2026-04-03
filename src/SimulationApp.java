@@ -24,7 +24,9 @@ public class SimulationApp extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                root.getChildren().removeIf(node -> node instanceof Circle);
+                if (!Toggles.PAINT_MODE) {
+                    root.getChildren().removeIf(node -> node instanceof Circle);
+                }
                 world.moveCreatures();
                 for (Creature c : world.getCreatures()) {
                     Circle circle = new Circle(c.x, c.y, 10.0, Color.BLUE);
@@ -34,7 +36,7 @@ public class SimulationApp extends Application {
         };
         timer.start();
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, world.getWidth(), world.getHeight());
         primaryStage.setTitle("LittleWorld Simulation");
         primaryStage.setScene(scene);
         primaryStage.show();
