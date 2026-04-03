@@ -22,7 +22,19 @@ public class World {
 
     public void moveCreatures() {
         for (Creature creature : creatures) {
+            double oldX = creature.x;
+            double oldY = creature.y;
+
             creature.move();
+
+            // Check for collisions and revert if necessary
+            boolean collision = creatures.stream()
+                .anyMatch(other -> creature.collidesWith(other));
+
+            if (collision) {
+                creature.x = oldX;
+                creature.y = oldY;
+            }
         }
     }
 

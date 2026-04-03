@@ -25,4 +25,8 @@ public class Creature {
             this.y = newY;
         }
     }
+
+    public boolean collidesWith(Creature other) {
+        return this != other && this.x == other.x && this.y == other.y;
+    }
 }
