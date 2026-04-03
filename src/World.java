@@ -15,4 +15,10 @@ public class World {
     public List<Creature> getCreatures() {
         return creatures;
     }
+
+    public void moveCreatures() {
+        for (Creature creature : creatures) {
+            creature.move();
+        }
+    }
 }
